@@ -34,13 +34,19 @@ const string =
 const expectedReturnString =
   "perhaps the easiest to understand case for reduce is to return the sum of all the elements in an array";
 
-const formattedString = string
+// const formattedString = string
+//   .trim()
+//   .replace(/\s+/g, " ")
+//   .replace(/[^a-zA-Z ]/g, "")
+//   .replaceAll(/[A-Z]/g, (upperLetter) => upperLetter.toLowerCase());
+
+const formattedString2 = string
   .trim()
   .replace(/\s+/g, " ")
   .replace(/[^a-zA-Z ]/g, "")
-  .replaceAll(/[A-Z]/g, (upperLetter) => upperLetter.toLowerCase());
+  .toLowerCase();
 
-console.log(formattedString);
+console.log(formattedString2);
 
 /*
   Question 3
@@ -68,12 +74,20 @@ const expectedReturnArray = [
   { uuid: 6, role: "pm", name: null },
 ];
 
-// const doubleQuantityAndPrice = itemsObject.map((item) => {
-//   return { quantity: item.quantity * 2, price: item.price * 2 };
-// });
+let mergedArray = first
+  .map((firstItem) => ({
+    ...firstItem,
+    ...second.find((secondItem) => secondItem.uuid === firstItem.uuid),
+  }))
+  .sort((a, b) => a.uuid - b.uuid);
 
-// const filterItems = itemsObject.filter((item) => item.quantity > 2 && item.price > 300);
-// const totalValue = itemsObject.reduce(
-//   (total, item) => total + item.quantity * item.price,
-//   0
-// );
+// console.log(mergedArray);
+
+const temp = second.filter(
+  (secondItem) => !mergedArray.find((firstItem) => firstItem.uuid === secondItem.uuid)
+);
+// console.log(temp);
+
+mergedArray = [...mergedArray, ...temp].sort((a, b) => a.uuid - b.uuid);
+
+console.log(mergedArray);
