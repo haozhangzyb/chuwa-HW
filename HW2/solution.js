@@ -1,58 +1,66 @@
 /*
+
 Question 1
+
 Given the array, implement a function for generating a new array which doubles the quantity and price in each object.
 Given the array, implement a function for generating a new array which contains item quantity > 2 and price > 300 only.
 Given the array, implement a function to calculate the total value of the items.
+
 */
+
 const itemsObject = [
   { quantity: 1, price: 200 },
   { quantity: 3, price: 350 },
   { quantity: 5, price: 400 },
 ];
 
-const doubleQuantityAndPrice = itemsObject.map(({ quantity, price }) => ({
-  quantity: quantity * 2,
-  price: price * 2,
-}));
+const doubleValue = (objArray) => {
+  return objArray.map(({ quantity, price }) => {
+    return {
+      quantity: quantity * 2,
+      price: price * 2,
+    };
+  });
+};
 
-const filteredItems = itemsObject.filter((item) => item.quantity > 2 && item.price > 300);
+const filterByCondition = (objArray) => {
+  return objArray.filter(({ quantity, price }) => {
+    return quantity > 2 && price > 300;
+  });
+};
 
-const totalValueOfItems = itemsObject.reduce(
-  (totalValue, item) => totalValue + item.price * item.quantity,
-  0
-);
-
-console.log(doubleQuantityAndPrice);
-console.log(filteredItems);
-console.log(totalValueOfItems);
+const totalValue = (objArray) => {
+  return objArray.reduce((acc, { quantity, price }) => {
+    return acc + quantity * price;
+  }, 0);
+};
 
 /*
+  
   Question 2
+  
   Given the string, implement a function to remove all the non-alphabet characters and extra space in the string and convert the string to all lowercase.
-*/
+  
+  */
+
 const string =
   " Perhaps The Easiest-to-understand   Case   For Reduce Is   To Return The Sum Of  All The Elements In  An Array  ";
+
 const expectedReturnString =
   "perhaps the easiest to understand case for reduce is to return the sum of all the elements in an array";
 
-// const formattedString = string
-//   .trim()
-//   .replace(/\s+/g, " ")
-//   .replace(/[^a-zA-Z ]/g, "")
-//   .replaceAll(/[A-Z]/g, (upperLetter) => upperLetter.toLowerCase());
-
-const formattedString2 = string
-  .trim()
-  .replace(/\s+/g, " ")
-  .replace(/[^a-zA-Z ]/g, "")
-  .toLowerCase();
-
-console.log(formattedString2);
+const stringConverter = (str) => {
+  return str.split(/[- ]+/).join(" ").trim().toLowerCase();
+};
 
 /*
+  
   Question 3
+  
   Implement a function to merge two arrays of objects on uuid, but first has uuid and name, second has uuid and role. With the not existing property, fill with null. Sort according to uuid after merge.
-*/
+  
+  */
+
 const first = [
   { uuid: 2, name: "test" },
   { uuid: 5, name: "test5" },
@@ -75,38 +83,29 @@ const expectedReturnArray = [
   { uuid: 6, role: "pm", name: null },
 ];
 
-let mergedArray = first
-  .map((firstItem) => ({
-    ...firstItem,
-    ...second.find((secondItem) => secondItem.uuid === firstItem.uuid),
-  }))
-  .sort((a, b) => a.uuid - b.uuid);
+const mergeTwoArray = (first, second) => {
+  const map = {};
+  [...first, ...second].forEach(({ uuid, role, name }) => {
+    if (!map[uuid]) {
+      map[uuid] = {
+        uuid,
+        ...{ role: role ? role : null },
+        ...{ name: name ? name : null },
+      };
+    } else {
+      map[uuid] = {
+        ...map[uuid],
+        ...{ role: role ? role : null },
+        ...{ name: name ? name : null },
+        //conditional add properties to object
+        // ...(role && { role: role }),
+        // ...(name && { name: name }),
+      };
+    }
+  });
 
-console.log(mergedArray);
+  //or you could use return Object.values(map);
+  return Object.values(map);
+};
 
-const temp = second.filter(
-  (secondItem) => !mergedArray.find((firstItem) => firstItem.uuid === secondItem.uuid)
-);
-// console.log(temp);
-
-mergedArray = [...mergedArray, ...temp].sort((a, b) => a.uuid - b.uuid);
-
-console.log(mergedArray);
-
-mergedArray = mergedArray.map((item) => ({
-  uuid: item.uuid,
-  role: item.role ? item.role : null,
-  name: item.name ? item.name : null,
-}));
-
-mergedArray.forEach((item, index, arr) => {
-  arr[index] = {
-    uuid: item.uuid,
-    role: item.role ? item.role : null,
-    name: item.name ? item.name : null,
-  };
-});
-
-console.log(mergedArray);
-
-// let newArrayOfObj = [];
+console.log(mergeTwoArray(first, second));
